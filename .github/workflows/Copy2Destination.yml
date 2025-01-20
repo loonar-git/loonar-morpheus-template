@@ -30,7 +30,7 @@ jobs:
           sudo apt install gh -y      
 
 
-      - name: Check CI Status
+      - name: Check CI
         run: |
           CI_STATUS=$(gh run list --workflow=CI --branch=main --json status --jq '.[0].status')
           if [ "$CI_STATUS" != "completed" ]; then
