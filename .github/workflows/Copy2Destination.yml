@@ -56,15 +56,18 @@ jobs:
         run: |
           if gh repo view "${{ vars.DESTINATION_ORG }}/$GITHUB_REPOSITORY" > /dev/null 2>&1; then
             echo "repository exists"
-            echo "::set-output name=result::repository exists"
+            echo "result=repository exists" >> $GITHUB_ENV
           else
             echo "repository does not exist"
-            echo "::set-output name=result::repository does not exist"
+            echo "result=repository does not exist" >> $GITHUB_ENV
           fi
 
       - name: Create Destination Repository if it Doesn't Exist
-        if: steps.check_repo.outputs.result == 'repository does not exist'
-        run: gh repo create "${{ vars.DESTINATION_ORG }}/$GITHUB_REPOSITORY" --private
+        if: env.result == 'repository does not exist'
+        run: |
+          for i in {1..5}; do
+            gh repo create "${{ vars.DESTINATION_ORG }}/$GITHUB_REPOSITORY" --private && break || sleep 15
+          done
 
       - name: Create Bare Clone of Source Repository
         run: git clone --bare https://github.com/${{ vars.SOURCE_ORG }}/$GITHUB_REPOSITORY.git
