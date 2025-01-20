@@ -17,7 +17,7 @@ fi
 REPO=$(gh repo view --json nameWithOwner --jq '.nameWithOwner')
 
 # Listar todos os workflows em execução
-running_jobs=$(gh run list --repo $REPO --status in_progress --json databaseId --jq '.[].databaseId')
+running_jobs=$(gh run list --repo "$REPO" --status in_progress --json databaseId --jq '.[].databaseId')
 
 # Cancelar todos os workflows em execução
 for job in $running_jobs
