@@ -77,5 +77,5 @@ jobs:
 
       - name: Mirror Push to Destination Repository
         run: |
-          cd $REPO_DIR
+          cd ${REPO_DIR}.git
           git push --mirror https://github.com/${{ vars.DESTINATION_ORG }}/$GITHUB_REPOSITORY.git
