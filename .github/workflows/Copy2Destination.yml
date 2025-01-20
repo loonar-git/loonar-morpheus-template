@@ -15,7 +15,7 @@ jobs:
           sudo apt update
           sudo apt install gh -y
 
-  check-ci-status:
+  check-ci-status2:
     runs-on: ubuntu-22.04
     needs: install-gh-cli
     steps:
@@ -45,7 +45,7 @@ jobs:
 
   copy-repo:
     runs-on: ubuntu-22.04
-    needs: check-ci-status
+    needs: check-ci-status2
 
     steps:
       - name: Checkout Source Repository
