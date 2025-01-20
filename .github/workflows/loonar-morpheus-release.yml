@@ -9,21 +9,18 @@ jobs:
   check-ci-status:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up GitHub CLI
-        uses: actions/setup-gh-cli@v1
-
       - name: Authenticate with GitHub CLI
         run: echo "${{ secrets.SOURCE_PAT }}" | gh auth login --with-token
 
       - name: Check CI Status
         id: ci_status
         run: |
-          CI_STATUS=$(gh run list --workflow=CI --branch=main --limit=1 --json status --jq '.[0].status')
+          CI_STATUS=$(gh run list --workflow=main --branch=main --limit=1 --json status --jq '.[0].status')
           if [ "$CI_STATUS" != "completed" ]; then
             echo "CI workflow is not completed. Exiting..."
             exit 1
           fi
-          CI_CONCLUSION=$(gh run list --workflow=CI --branch=main --limit=1 --json conclusion --jq '.[0].conclusion')
+          CI_CONCLUSION=$(gh run list --workflow=main --branch=main --limit=1 --json conclusion --jq '.[0].conclusion')
           if [ "$CI_CONCLUSION" != "success" ]; then
             echo "CI workflow did not succeed. Exiting..."
             exit 1
@@ -36,9 +33,6 @@ jobs:
     steps:
       - name: Checkout Source Repository
         uses: actions/checkout@v3
-
-      - name: Set up GitHub CLI
-        uses: actions/setup-gh-cli@v1
 
       - name: Authenticate with GitHub CLI
         run: echo "${{ secrets.SOURCE_PAT }}" | gh auth login --with-token

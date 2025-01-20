@@ -1,64 +1,57 @@
-name: CI
+name: Code Validation
 
-on:
-  push:
-    branches:
-      - dev
-      - main
-  pull_request:
-    branches:
-      - main
+on: [push, pull_request]
 
 jobs:
-  lint:
+  validate:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout source code
       uses: actions/checkout@v2
 
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.11'
+        python-version: 3.x
 
-    - name: Install pre-commit
+    - name: Install truffleHog
       run: |
-        pip install pre-commit
-        pre-commit install
+        python -m pip install truffleHog
 
-    - name: Run pre-commit
-      run: pre-commit run --all-files
+    - name: Run truffleHog to check for secrets
+      run: trufflehog filesystem --directory ./
 
-  secrets:
-    runs-on: ubuntu-latest
+    - name: Set up Bash linter
+      run: sudo apt-get install shellcheck
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+    - name: Run Bash linter
+      run: shellcheck **/*.sh
 
-    - name: Install trufflehog
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v1
+
+    - name: Run Terraform fmt
+      run: terraform fmt -check -recursive
+
+    - name: Run Terraform validate
+      run: terraform validate
+
+    - name: Install tfsec
       run: |
-        pip install trufflehog
+        curl -L "$(curl -s https://api.github.com/repos/aquasecurity/tfsec/releases/latest | grep browser_download_url | grep linux_amd64 | cut -d '"' -f 4)" -o tfsec
+        chmod +x tfsec
+        sudo mv tfsec /usr/local/bin/
 
-    - name: Scan for secrets
-      run: trufflehog filesystem --directory .
+    - name: Run tfsec to check for security issues in Terraform code
+      run: tfsec .
 
-  vulnerabilities:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.11'
-
-    - name: Install safety
+    - name: Install bash security linter (devskim)
       run: |
-        pip install safety
+        curl -L "https://github.com/microsoft/DevSkim/releases/latest/download/devskim-linux-x64.zip" -o devskim.zip
+        unzip devskim.zip -d devskim
+        chmod +x devskim/DevSkim
+        sudo mv devskim /usr/local/bin/devskim
 
-    - name: Check for vulnerabilities
-      run: safety check
+    - name: Run DevSkim to check for security issues in Bash code
+      run: devskim analyze --output-format sarif > devskim-results.sarif
