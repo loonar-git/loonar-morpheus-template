@@ -54,7 +54,7 @@ jobs:
       - name: Check if Destination Repository Exists
         id: check_repo
         run: |
-          if gh repo view "${{ env.DESTINATION_ORG }}/$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+          if gh repo view "${{ vars.DESTINATION_ORG }}/$GITHUB_REPOSITORY" > /dev/null 2>&1; then
             echo "repository exists"
             echo "::set-output name=result::repository exists"
           else
@@ -64,12 +64,12 @@ jobs:
 
       - name: Create Destination Repository if it Doesn't Exist
         if: steps.check_repo.outputs.result == 'repository does not exist'
-        run: gh repo create "${{ env.DESTINATION_ORG }}/$GITHUB_REPOSITORY" --private
+        run: gh repo create "${{ vars.DESTINATION_ORG }}/$GITHUB_REPOSITORY" --private
 
       - name: Create Bare Clone of Source Repository
-        run: git clone --bare https://github.com/${{ env.SOURCE_ORG }}/$GITHUB_REPOSITORY.git
+        run: git clone --bare https://github.com/${{ vars.SOURCE_ORG }}/$GITHUB_REPOSITORY.git
 
       - name: Mirror Push to Destination Repository
         run: |
           cd $GITHUB_REPOSITORY.git
-          git push --mirror https://github.com/${{ env.DESTINATION_ORG }}/$GITHUB_REPOSITORY.git
+          git push --mirror https://github.com/${{ vars.DESTINATION_ORG }}/$GITHUB_REPOSITORY.git
