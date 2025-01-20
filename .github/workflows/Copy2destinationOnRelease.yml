@@ -1,5 +1,4 @@
 name: Copy Repository to Destination on Release
-
 on:
   release:
     types:
@@ -10,9 +9,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Setup GitHub CLI
-        uses: actions/setup-node@v3
-        with:
-          node-version: '14'
+        uses: actions/install-gh@v2
+
       - name: Authenticate with GitHub CLI
         run: echo "${{ secrets.SOURCE_PAT }}" | gh auth login --with-token
 
