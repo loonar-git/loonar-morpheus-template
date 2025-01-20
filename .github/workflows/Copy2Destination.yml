@@ -23,14 +23,6 @@ jobs:
         run: echo "${{ secrets.SOURCE_PAT }}" | gh auth login --with-token
         shell: bash
 
-      - name: Install GitHub CLI
-        run: |
-          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
-          sudo apt-add-repository https://cli.github.com/packages
-          sudo apt update
-          sudo apt install gh -y      
-
-
       - name: Check CI
         run: |
           CI_STATUS=$(gh run list --workflow=CI --branch=main --json status --jq '.[0].status')
@@ -51,13 +43,6 @@ jobs:
     steps:
       - name: Checkout Source Repository
         uses: actions/checkout@v3
-
-      - name: Install GitHub CLI
-        run: |
-          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
-          sudo apt-add-repository https://cli.github.com/packages
-          sudo apt update
-          sudo apt install gh -y      
       
       - name: Authenticate with GitHub CLI
         run: echo "${{ secrets.SOURCE_PAT }}" | gh auth login --with-token
