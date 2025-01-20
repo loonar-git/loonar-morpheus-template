@@ -7,7 +7,7 @@ on:
 
 jobs:
   check-ci-status:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Authenticate with GitHub CLI
         run: echo "${{ secrets.SOURCE_PAT }}" | gh auth login --with-token
@@ -27,7 +27,7 @@ jobs:
           fi
 
   copy-repo:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: check-ci-status
 
     steps:
