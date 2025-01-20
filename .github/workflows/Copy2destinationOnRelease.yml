@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Setup GitHub CLI
-        uses: actions/install-gh@v2
+        uses: loonar-git/setup-gh-cli-action@main
 
       - name: Authenticate with GitHub CLI
         run: echo "${{ secrets.SOURCE_PAT }}" | gh auth login --with-token
