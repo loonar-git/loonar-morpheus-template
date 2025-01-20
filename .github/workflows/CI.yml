@@ -38,4 +38,4 @@ jobs:
       run: pip install truffleHog
 
     - name: Run trufflehog to check for secrets
-      run: trufflehog filesystem --json --directory .
+      run: trufflehog filesystem --json --repo_path .
