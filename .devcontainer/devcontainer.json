@@ -1,0 +1,92 @@
+{
+  "name": "Ubuntu",
+  "image": "mcr.microsoft.com/devcontainers/base:jammy",
+  "features": {
+    "ghcr.io/stuartleeks/dev-container-features/shell-history:0": {},
+    "ghcr.io/lukewiwa/features/wait-for-it:0": {
+      "strict": true,
+      "host": "localhost"
+    },
+    "ghcr.io/edouard-lopez/devcontainer-features/bats:0": {
+      "version": "latest"
+    },
+    "ghcr.io/eliises/devcontainer-features/bash-profile:1": {
+      "command": "alias k=kubectl",
+      "file": "$_CONTAINER_USER_HOME/.bashrc"
+    },
+    "ghcr.io/devcontainers-extra/features/bash-command:1": {
+      "command": "echo hi!"
+    },
+    "ghcr.io/devcontainers/features/terraform:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/ruby:1": {
+      "version": "3.3.1"
+    },
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.11"
+    }
+  },
+  "runArgs": [
+    "--privileged",
+    "-u", "root",
+    "-v", "/var/run/docker.sock:/var/run/docker.sock"
+  ],
+  "mounts": [
+    "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "rogalmic.bash-debug",
+        "Oracle.oci-core",
+        "Oracle.rms",
+        "Oracle.oci-vscode-toolkit",
+        "joaofelipes.oci-policy-language",
+        "foxundermoon.shell-format",
+        "timonwong.shellcheck",
+        "spmeesseman.vscode-taskexplorer",
+        "yamajyn.commandlist",
+        "rpinski.shebang-snippets",
+        "bmalehorn.shell-syntax",
+        "tetradresearch.vscode-h2o",
+        "vivaxy.vscode-conventional-commits",
+        "adam-bender.commit-message-editor",
+        "maciejdems.add-to-gitignore",
+        "GitHub.copilot-chat",
+        "quentinguidee.gitignore-ultimate",
+        "piotrpalarz.vscode-gitignore-generator",
+        "DevEscalus.git-commit-no-verify-action-button",
+        "ms-azuretools.vscode-docker",
+        "HashiCorp.terraform",
+        "GitHub.vscode-github-actions",
+        "mads-hartmann.bash-ide-vscode",
+        "mkhl.shfmt",
+        "bruno-api-client.bruno",
+        "Postman.postman-for-vscode",
+        "humao.rest-client",
+        "hediet.debug-visualizer",
+        "adrianwilczynski.terminal-commands",
+        "ArshdeepSingh.toggle-terminal-through-status-bar",
+        "Docter60.vscode-terminal-for-ubuntu",
+        "Fooxly.quick-terminal",
+        "fuadpashayev.bottom-terminal",
+        "nguyenngoclong.terminal-keeper",
+        "Tyriar.vscode-terminal-here",
+        "yasht.terminal-all-in-one",
+        "amirHA.better-comments-2",
+        "Gruntfuggly.todo-tree",
+        "dotenv.dotenv-vscode",
+        "funkyremi.vscode-google-translate",
+        "mauro-desouza.vscode-simple-readme",
+        "shd101wyy.markdown-preview-enhanced",
+        "DavidAnson.vscode-markdownlint",
+        "MarkLarah.pre-commit-vscode"
+      ]
+    }
+  },
+  "postCreateCommand": "./setup.sh"
+}

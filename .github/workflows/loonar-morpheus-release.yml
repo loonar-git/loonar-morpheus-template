@@ -1,0 +1,67 @@
+name: Copy Repository to Destination on Release
+
+on:
+  release:
+    types:
+      - created
+
+jobs:
+  check-ci-status:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up GitHub CLI
+        uses: actions/setup-gh-cli@v1
+
+      - name: Authenticate with GitHub CLI
+        run: echo "${{ secrets.SOURCE_PAT }}" | gh auth login --with-token
+
+      - name: Check CI Status
+        id: ci_status
+        run: |
+          CI_STATUS=$(gh run list --workflow=CI --branch=main --limit=1 --json status --jq '.[0].status')
+          if [ "$CI_STATUS" != "completed" ]; then
+            echo "CI workflow is not completed. Exiting..."
+            exit 1
+          fi
+          CI_CONCLUSION=$(gh run list --workflow=CI --branch=main --limit=1 --json conclusion --jq '.[0].conclusion')
+          if [ "$CI_CONCLUSION" != "success" ]; then
+            echo "CI workflow did not succeed. Exiting..."
+            exit 1
+          fi
+
+  copy-repo:
+    runs-on: ubuntu-latest
+    needs: check-ci-status
+
+    steps:
+      - name: Checkout Source Repository
+        uses: actions/checkout@v3
+
+      - name: Set up GitHub CLI
+        uses: actions/setup-gh-cli@v1
+
+      - name: Authenticate with GitHub CLI
+        run: echo "${{ secrets.SOURCE_PAT }}" | gh auth login --with-token
+
+      - name: Check if Destination Repository Exists
+        id: check_repo
+        run: |
+          if gh repo view "${{ env.DESTINATION_ORG }}/$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            echo "repository exists"
+            echo "::set-output name=result::repository exists"
+          else
+            echo "repository does not exist"
+            echo "::set-output name=result::repository does not exist"
+          fi
+
+      - name: Create Destination Repository if it Doesn't Exist
+        if: steps.check_repo.outputs.result == 'repository does not exist'
+        run: gh repo create "${{ env.DESTINATION_ORG }}/$GITHUB_REPOSITORY" --private
+
+      - name: Create Bare Clone of Source Repository
+        run: git clone --bare https://github.com/${{ env.SOURCE_ORG }}/$GITHUB_REPOSITORY.git
+
+      - name: Mirror Push to Destination Repository
+        run: |
+          cd $GITHUB_REPOSITORY.git
+          git push --mirror https://github.com/${{ env.DESTINATION_ORG }}/$GITHUB_REPOSITORY.git
