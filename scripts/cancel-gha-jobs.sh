@@ -23,7 +23,7 @@ running_jobs=$(gh run list --repo "$REPO" --status in_progress --json databaseId
 for job in $running_jobs
 do
     echo "Cancelling job ID: $job"
-    gh run cancel --repo your-org/your-repo $job 
+    gh run cancel --repo your-org/your-repo "$job" 
 done
 
 echo "All running jobs have been cancelled."
