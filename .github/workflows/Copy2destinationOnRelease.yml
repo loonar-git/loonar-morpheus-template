@@ -5,18 +5,30 @@ on:
       - created
 
 jobs:
-  check-ci-status:
+  install-gh-cli:
     runs-on: ubuntu-22.04
     steps:
+      - name: Install GitHub CLI
+        run: |
+          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+          sudo apt-add-repository https://cli.github.com/packages
+          sudo apt update
+          sudo apt install gh -y
 
-      - name: Setup GitHub CLI
-        uses: loonar-git/setup-gh-cli-action@main
-        with:
-          version: stable
-    
-
+  check-ci-status:
+    runs-on: ubuntu-22.04
+    needs: install-gh-cli
+    steps:
       - name: Authenticate with GitHub CLI
-        run: echo "${{ secrets.SOURCE_PAT }}" | gh auth login --with-token
+        run: echo "\${{ secrets.SOURCE_PAT }}" | gh auth login --with-token
+
+      - name: Install GitHub CLI
+        run: |
+          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+          sudo apt-add-repository https://cli.github.com/packages
+          sudo apt update
+          sudo apt install gh -y      
+
 
       - name: Check CI Status
         run: |
@@ -39,10 +51,12 @@ jobs:
       - name: Checkout Source Repository
         uses: actions/checkout@v3
 
-      - name: Setup GitHub CLI
-        uses: loonar-git/setup-gh-cli-action@main
-        with:
-          version: stable
+      - name: Install GitHub CLI
+        run: |
+          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+          sudo apt-add-repository https://cli.github.com/packages
+          sudo apt update
+          sudo apt install gh -y      
       
       - name: Authenticate with GitHub CLI
         run: echo "${{ secrets.SOURCE_PAT }}" | gh auth login --with-token
