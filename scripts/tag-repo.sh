@@ -4,9 +4,12 @@
 increment_version() {
   local version="$1"
   local part="$2"
-  local major=$(echo "$version" | cut -d. -f1)
-  local minor=$(echo "$version" | cut -d. -f2)
-  local patch=$(echo "$version" | cut -d. -f3)
+  local major
+  major=$(echo "$version" | cut -d. -f1)
+  local minor
+  minor=$(echo "$version" | cut -d. -f2)
+  local patch
+  patch=$(echo "$version" | cut -d. -f3)
 
   case "$part" in
     major)
@@ -33,7 +36,7 @@ increment_version() {
 git fetch --tags
 
 # Get the latest tag version
-latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+latest_tag=$(git describe --tags "git rev-list --tags --max-count=1")
 latest_version=${latest_tag#v}
 if [ -z "$latest_version" ]; then
   latest_version="0.0.0"
@@ -43,7 +46,7 @@ echo "Current version: $latest_version"
 
 # Prompt for version increment type
 while true; do
-  read -p "Enter version increment type (major, minor, patch): " part
+  read -rp "Enter version increment type (major, minor, patch): " part
   if [[ "$part" =~ ^(major|minor|patch)$ ]]; then
     break
   else
