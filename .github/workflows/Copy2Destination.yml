@@ -20,7 +20,8 @@ jobs:
     needs: install-gh-cli
     steps:
       - name: Authenticate with GitHub CLI
-        run: echo "\${{ secrets.SOURCE_PAT }}" | gh auth login --with-token
+        run: echo "${{ secrets.SOURCE_PAT }}" | gh auth login --with-token
+        shell: bash
 
       - name: Install GitHub CLI
         run: |
@@ -60,6 +61,7 @@ jobs:
       
       - name: Authenticate with GitHub CLI
         run: echo "${{ secrets.SOURCE_PAT }}" | gh auth login --with-token
+        shell: bash
 
       - name: Check if Destination Repository Exists
         id: check_repo
