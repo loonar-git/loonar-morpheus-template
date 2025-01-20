@@ -27,9 +27,7 @@ jobs:
 
     - name: Install tfsec
       run: |
-        curl -L "$(curl -s https://api.github.com/repos/aquasecurity/tfsec/releases/latest | grep browser_download_url | grep linux_amd64 | cut -d '"' -f 4)" -o tfsec
-        chmod +x tfsec
-        sudo mv tfsec /usr/local/bin/
+        curl -sSL https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | sh
 
     - name: Run tfsec to check for security issues in Terraform code
       run: tfsec .
@@ -39,7 +37,7 @@ jobs:
         curl -L "https://github.com/microsoft/DevSkim/releases/latest/download/devskim-linux-x64.zip" -o devskim.zip
         unzip devskim.zip -d devskim
         chmod +x devskim/DevSkim
-        sudo mv devskim /usr/local/bin/devskim
+        sudo mv devskim/DevSkim /usr/local/bin/devskim
 
     - name: Run DevSkim to check for security issues in Bash code
       run: devskim analyze --output-format sarif > devskim-results.sarif
