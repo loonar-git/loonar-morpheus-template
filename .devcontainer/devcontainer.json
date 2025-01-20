@@ -87,6 +87,7 @@
         "MarkLarah.pre-commit-vscode"
       ]
     }
-  },
-  "postCreateCommand": "./setup.sh"
+  }
+  //,
+  //"postCreateCommand": "scritps/setup-container.sh"
 }
