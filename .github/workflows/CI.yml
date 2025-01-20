@@ -1,4 +1,4 @@
-name: Code Validation
+name: CI
 
 on: [push, pull_request]
 
@@ -7,20 +7,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout source code
+    - name: Checkout code
       uses: actions/checkout@v2
-
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.x
-
-    - name: Install truffleHog
-      run: |
-        python -m pip install truffleHog
-
-    - name: Run truffleHog to check for secrets
-      run: trufflehog filesystem --directory ./
 
     - name: Set up Bash linter
       run: sudo apt-get install shellcheck
@@ -55,3 +43,9 @@ jobs:
 
     - name: Run DevSkim to check for security issues in Bash code
       run: devskim analyze --output-format sarif > devskim-results.sarif
+
+    - name: Install trufflehog
+      run: pip install truffleHog
+
+    - name: Run trufflehog to check for secrets
+      run: trufflehog filesystem --json .
