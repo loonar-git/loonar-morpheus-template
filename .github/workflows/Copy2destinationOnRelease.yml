@@ -9,11 +9,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
 
-      - name: Set up GitHub CLI
-        uses: cli/cli-action@v2
-
-      # - name: Setup GitHub CLI
-      #   uses: loonar-git/setup-gh-cli-action@main
+      - name: Setup GitHub CLI
+        uses: loonar-git/setup-gh-cli-action@main
 
       - name: Authenticate with GitHub CLI
         run: echo "${{ secrets.SOURCE_PAT }}" | gh auth login --with-token
@@ -39,8 +36,8 @@ jobs:
       - name: Checkout Source Repository
         uses: actions/checkout@v3
 
-      - name: Set up GitHub CLI
-        uses: cli/cli-action@v2
+      - name: Setup GitHub CLI
+        uses: loonar-git/setup-gh-cli-action@main
 
       - name: Authenticate with GitHub CLI
         run: echo "${{ secrets.SOURCE_PAT }}" | gh auth login --with-token
