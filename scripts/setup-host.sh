@@ -6,9 +6,11 @@ set -e
 
 # Instalar features adicionais
 curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash
-echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
-echo 'eval "$(rbenv init -)"' >> ~/.bashrc
-source ~/.bashrc
+echo "export PATH=${HOME}/.rbenv/bin:$PATH" >> ~/.bashrc
+echo "eval $(rbenv init -)" >> ~/.bashrc
+# shellcheck disable=SC1090
+# shellcheck disable=SC2088
+source "~/.bashrc"
 rbenv install 3.3.1
 rbenv global 3.3.1
 
@@ -19,11 +21,15 @@ gem install csv morpheus-cli
 # Instalar Python via pyenv
 curl https://pyenv.run | bash
 
-echo 'export PATH="$HOME/.pyenv/bin:$PATH"' >> ~/.bashrc
-echo 'eval "$(pyenv init --path)"' >> ~/.bashrc
-echo 'eval "$(pyenv init -)"' >> ~/.bashrc
-echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
-source ~/.bashrc
+# shellcheck disable=SC2129
+echo "export PATH=$HOME/.pyenv/bin:$PATH" >> ~/.bashrc
+echo "eval $(pyenv init --path)" >> ~/.bashrc
+echo "eval $(pyenv init -)" >> ~/.bashrc
+echo "eval $(pyenv virtualenv-init -)" >> ~/.bashrc
+
+# shellcheck disable=SC2088
+# shellcheck disable=SC1090
+source "~/.bashrc"
 pyenv install 3.11.2
 pyenv global 3.11.2
 
