@@ -36,10 +36,10 @@ jobs:
 
     - name: Install bash security linter (devskim)
       run: |
-        curl -L "https://github.com/microsoft/DevSkim/releases/latest/download/devskim-linux-x64.zip" -o devskim.zip
-        unzip devskim.zip -d devskim
-        chmod +x devskim/DevSkim
-        sudo mv devskim/DevSkim /usr/local/bin/devskim
+        curl -L "https://github.com/microsoft/DevSkim/releases/latest/download/devskim-linux-x64.tar.gz" -o devskim.tar.gz
+        tar -xzf devskim.tar.gz
+        chmod +x DevSkim
+        sudo mv DevSkim /usr/local/bin/devskim
 
     - name: Run DevSkim to check for security issues in Bash code
       run: devskim analyze --output-format sarif > devskim-results.sarif
