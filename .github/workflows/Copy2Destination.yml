@@ -72,7 +72,10 @@ jobs:
       - name: Create Bare Clone of Source Repository
         run: git clone --bare https://github.com/${{ vars.SOURCE_ORG }}/${{ github.event.repository.name }}.git
 
+      - name: Set Repository Directory Name
+        run: echo "REPO_DIR=$(basename https://github.com/${{ vars.SOURCE_ORG }}/${{ github.event.repository.name }}.git .git)" >> $GITHUB_ENV
+
       - name: Mirror Push to Destination Repository
         run: |
-          cd $GITHUB_REPOSITORY.git
+          cd $REPO_DIR
           git push --mirror https://github.com/${{ vars.DESTINATION_ORG }}/$GITHUB_REPOSITORY.git
