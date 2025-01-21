@@ -29,6 +29,7 @@ jobs:
       - name: Check CI
         run: |
           CI_STATUS=$(gh run list --workflow=CI --branch=main --json status --jq '.[0].status')
+
           if [ "$CI_STATUS" != "completed" ]; then
             echo "CI workflow is not completed. Exiting..."
             exit 1
@@ -51,19 +52,16 @@ jobs:
         id: check_repo
         run: |
           if gh repo view "${{ vars.DESTINATION_ORG }}/$GITHUB_REPOSITORY" > /dev/null 2>&1; then
-            echo "repository exists"
             echo "result=repository exists"
+            echo "::set-output name=REPO_EXISTS::true"
           else
             echo "repository does not exist"
-            echo "result=repository does not exist"
+            echo "::set-output name=REPO_EXISTS::false"
           fi
 
       - name: Create Destination Repository if it Doesn't Exist
-        if: steps.check_repo.outputs.result == 'repository does not exist'
-        run: |
-          for i in {1..5}; do
-            gh repo create "${{ vars.DESTINATION_ORG }}/$GITHUB_REPOSITORY" --private && break || sleep 15
-          done
+        if: steps.check_repo.outputs.REPO_EXISTS == 'false'
+        run: gh repo create "${{ vars.DESTINATION_ORG }}/$GITHUB_REPOSITORY" --private
 
       - name: Create Bare Clone of Source Repository
         run: git clone --bare https://github.com/${{ vars.SOURCE_ORG }}/${{ github.event.repository.name }}.git
