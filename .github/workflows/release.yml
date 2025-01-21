@@ -61,7 +61,10 @@ jobs:
   
       - name: Create Destination Repository if it Doesn't Exist
         if: steps.check_repo.outputs.REPO_EXISTS == 'false'
-        run: gh repo create "${{ vars.DESTINATION_ORG }}/$GITHUB_REPOSITORY" --private
+        run: | 
+            echo "Creating repository: ${{ vars.DESTINATION_ORG }}/$GITHUB_REPOSITORY"
+            echo ${{ secrets.SOURCE_PAT }} | gh auth login --with-token
+            gh repo create "${{ vars.DESTINATION_ORG }}/$GITHUB_REPOSITORY" --private
         env:
           GH_TOKEN: ${{ secrets.SOURCE_PAT }}
 
