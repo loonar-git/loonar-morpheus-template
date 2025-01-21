@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# TODO Implementar CODEOWNERS
+
 gh auth login
 
 gh api -X PUT \
