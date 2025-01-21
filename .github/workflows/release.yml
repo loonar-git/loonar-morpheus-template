@@ -80,8 +80,9 @@ jobs:
 
       - name: Mirror Push to Destination Repository
         run: |
+          REPO_NAME=$(basename $GITHUB_REPOSITORY)  
           cd ${REPO_DIR}.git
-          git push --mirror https://github.com/${{ vars.DESTINATION_ORG }}/$GITHUB_REPOSITORY.git
+          git push --mirror https://github.com/${{ vars.DESTINATION_ORG }}/$REPO_NAME.git
         env:
           GH_TOKEN: ${{ secrets.SOURCE_PAT }}
   
