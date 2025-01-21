@@ -14,8 +14,6 @@ jobs:
           echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
           sudo apt update
           sudo apt install gh -y
-        env:
-          GH_TOKEN: ${{ secrets.SOURCE_PAT }}
 
   check-ci-status:
     runs-on: ubuntu-22.04
@@ -37,7 +35,9 @@ jobs:
             echo "CI workflow did not succeed. Exiting..."
             exit 1
           fi
-
+        env:
+          GH_TOKEN: ${{ secrets.SOURCE_PAT }}
+  
   copy-repo:
     runs-on: ubuntu-22.04
     needs: check-ci-status
@@ -56,18 +56,29 @@ jobs:
             echo "repository does not exist"
             echo "::set-output name=REPO_EXISTS::false"
           fi
-
+        env:
+          GH_TOKEN: ${{ secrets.SOURCE_PAT }}
+  
       - name: Create Destination Repository if it Doesn't Exist
         if: steps.check_repo.outputs.REPO_EXISTS == 'false'
         run: gh repo create "${{ vars.DESTINATION_ORG }}/$GITHUB_REPOSITORY" --private
+        env:
+          GH_TOKEN: ${{ secrets.SOURCE_PAT }}
 
       - name: Create Bare Clone of Source Repository
         run: git clone --bare https://github.com/${{ vars.SOURCE_ORG }}/${{ github.event.repository.name }}.git
+        env:
+          GH_TOKEN: ${{ secrets.SOURCE_PAT }}
 
       - name: Set Repository Directory Name
         run: echo "REPO_DIR=$(basename https://github.com/${{ vars.SOURCE_ORG }}/${{ github.event.repository.name }}.git .git)" >> $GITHUB_ENV
+        env:
+          GH_TOKEN: ${{ secrets.SOURCE_PAT }}
 
       - name: Mirror Push to Destination Repository
         run: |
           cd ${REPO_DIR}.git
           git push --mirror https://github.com/${{ vars.DESTINATION_ORG }}/$GITHUB_REPOSITORY.git
+        env:
+          GH_TOKEN: ${{ secrets.SOURCE_PAT }}
+  
