@@ -1,30 +1,21 @@
 FROM ubuntu:22.04
 
-# Instalar dependências
+ENV PATH="/usr/local/go/bin:/root/go/bin:${PATH}"
+
 RUN apt-get update && apt-get install -y \
     curl \
-    sudo \
-    shellcheck \
-    golang-go \
-    python3-pip \
-    && rm -rf /var/lib/apt/lists/*
+    gnupg \
+    software-properties-common \
+    lsb-release \
+    python3-pip && \
+    curl -fsSL https://golang.org/dl/go1.21.1.linux-amd64.tar.gz | tar -C /usr/local -xz && \
+    curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/hashicorp.list && \
+    apt-get update && \
+    apt-get install -y terraform && \
+    go install github.com/aquasecurity/tfsec/cmd/tfsec@latest && \
+    pip install truffleHog
 
-# Instalar Terraform
-RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add - \
-    && apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" \
-    && apt-get update && sudo apt-get install -y terraform
-
-# Instalar tfsec
-RUN go install github.com/aquasecurity/tfsec/cmd/tfsec@latest
-
-# Instalar trufflehog
-RUN pip install truffleHog
-
-# Adicionar tfsec ao PATH
-ENV PATH="/root/go/bin:${PATH}"
-
-# Definir diretório de trabalho
 WORKDIR /workspace
 
-# Comando padrão
 CMD ["bash"]
