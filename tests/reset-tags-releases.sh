@@ -6,7 +6,12 @@ git tag -l | xargs git tag -d
 # Delete remote tags
 git ls-remote --tags origin | awk '{print $2}' | grep -v '{}' | sed 's#refs/tags/##' | xargs -I {} git push origin :refs/tags/{}
 
-git tag v0.0.0 -m "WIP [skip ci]"
+# Delete all releases
+gh release list --json tagName --jq '.[].tagName' | while read tag; do gh release delete "$tag" -y; done
+
+
+
+git tag v0.0.0 -m "WIP"
 git push origin v0.0.0
 
 # Função para verificar se há workflows em execução
@@ -31,4 +36,4 @@ while ! check_workflows; do
 done
 
 # Criar um novo release com o nome WIP para a tag v0.0.0 como pre-release
-gh release create v0.0.0 --title "WIP" --notes "[skip ci]" --generate-notes --prerelease --draft
+gh release create v0.0.0 --title "WIP" --generate-notes #--prerelease --draft

@@ -44,23 +44,25 @@ jobs:
 
     steps:
       - name: Checkout Source Repository
+        id: checkout_source
         uses: actions/checkout@v3
       
       - name: Check if Destination Repository Exists
         id: check_repo
         run: |
-          if gh repo view "${{ vars.DESTINATION_ORG }}/$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+          if gh repo view "${{ vars.DESTINATION_ORG }}/$(basename $GITHUB_REPOSITORY)" > /dev/null 2>&1; then
             echo "result=repository exists"
-            echo "REPO_EXISTS=true" >> $GITHUB_ENV
+            echo "::set-output name=REPO_EXISTS::true"
           else
             echo "repository does not exist"
-            echo "REPO_EXISTS=false" >> $GITHUB_ENV
+            echo "::set-output name=REPO_EXISTS::false"
           fi
         env:
           GH_TOKEN: ${{ secrets.SOURCE_PAT }}
   
       - name: Create Destination Repository if it Doesn't Exist
-        if: ${{ steps.check_repo.outputs.REPO_EXISTS == 'false' }}
+        id: create_repo
+        if: steps.check_repo.outputs.REPO_EXISTS == 'false'
         run: | 
             REPO_NAME=$(basename $GITHUB_REPOSITORY)
             echo "Creating repository: ${{ vars.DESTINATION_ORG }}/$REPO_NAME"
@@ -69,20 +71,16 @@ jobs:
           GH_TOKEN: ${{ secrets.SOURCE_PAT }}
 
       - name: Create Bare Clone of Source Repository
+        id: clone_repo
         run: git clone --bare https://github.com/${{ vars.SOURCE_ORG }}/${{ github.event.repository.name }}.git
         env:
           GH_TOKEN: ${{ secrets.SOURCE_PAT }}
 
-      - name: Set Repository Directory Name
-        run: echo "REPO_DIR=$(basename https://github.com/${{ vars.SOURCE_ORG }}/${{ github.event.repository.name }}.git .git)" >> $GITHUB_ENV
-        env:
-          GH_TOKEN: ${{ secrets.SOURCE_PAT }}
-
       - name: Mirror Push to Destination Repository
+        id: mirror_push
         run: |
           REPO_NAME=$(basename $GITHUB_REPOSITORY)  
           cd ${REPO_DIR}.git
           git push --mirror https://github.com/${{ vars.DESTINATION_ORG }}/$REPO_NAME.git
         env:
           GH_TOKEN: ${{ secrets.SOURCE_PAT }}
-  
