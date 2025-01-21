@@ -63,8 +63,8 @@ jobs:
         if: steps.check_repo.outputs.REPO_EXISTS == 'false'
         run: | 
             echo "Creating repository: ${{ vars.DESTINATION_ORG }}/$GITHUB_REPOSITORY"
-            echo ${{ secrets.SOURCE_PAT }} | gh auth login --with-token
-            gh repo create "${{ vars.DESTINATION_ORG }}/$GITHUB_REPOSITORY" --private
+            REPO_NAME=$(basename $GITHUB_REPOSITORY)
+            gh repo create "${{ vars.DESTINATION_ORG }}/$REPO_NAME" --private
         env:
           GH_TOKEN: ${{ secrets.SOURCE_PAT }}
 
