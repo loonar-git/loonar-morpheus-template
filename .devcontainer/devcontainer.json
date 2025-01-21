@@ -84,7 +84,8 @@
         "mauro-desouza.vscode-simple-readme",
         "shd101wyy.markdown-preview-enhanced",
         "DavidAnson.vscode-markdownlint",
-        "MarkLarah.pre-commit-vscode"
+        "MarkLarah.pre-commit-vscode",
+        "usernamehw.errorlens"
       ]
     }
   }
