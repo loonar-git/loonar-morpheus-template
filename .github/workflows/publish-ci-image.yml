@@ -1,4 +1,4 @@
-name: Publish Docker image
+name: Publish CI Docker image
 
 on:
   push:
@@ -28,6 +28,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
-          context: .github/.
+          context: .
+          file: .github/Dockerfile
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/loonar-morpheus-template:latest
