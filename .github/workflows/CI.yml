@@ -2,9 +2,13 @@ name: CI
 
 on:
   push:
-    tags-ignore:
+    branches:
       - '*'
+    tags-ignore:
+      - 'v*'
   pull_request:
+    branches:
+      - '*'
 
 jobs:
   validate:
