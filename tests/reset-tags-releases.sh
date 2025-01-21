@@ -7,7 +7,7 @@ git tag -l | xargs git tag -d
 git ls-remote --tags origin | awk '{print $2}' | grep -v '{}' | sed 's#refs/tags/##' | xargs -I {} git push origin :refs/tags/{}
 
 # Delete all releases
-gh release list --json tagName --jq '.[].tagName' | while read tag; do gh release delete "$tag" -y; done
+gh release list --json tagName --jq '.[].tagName' | while read -r tag; do gh release delete "$tag" -y; done
 
 
 
