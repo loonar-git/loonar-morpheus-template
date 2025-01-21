@@ -51,19 +51,19 @@ jobs:
         run: |
           if gh repo view "${{ vars.DESTINATION_ORG }}/$GITHUB_REPOSITORY" > /dev/null 2>&1; then
             echo "result=repository exists"
-            echo "::set-output name=REPO_EXISTS::true"
+            echo "REPO_EXISTS=true" >> $GITHUB_ENV
           else
             echo "repository does not exist"
-            echo "::set-output name=REPO_EXISTS::false"
+            echo "REPO_EXISTS=false" >> $GITHUB_ENV
           fi
         env:
           GH_TOKEN: ${{ secrets.SOURCE_PAT }}
   
       - name: Create Destination Repository if it Doesn't Exist
-        if: steps.check_repo.outputs.REPO_EXISTS == 'false'
+        if: ${{ steps.check_repo.outputs.REPO_EXISTS == 'false' }}
         run: | 
-            echo "Creating repository: ${{ vars.DESTINATION_ORG }}/$GITHUB_REPOSITORY"
             REPO_NAME=$(basename $GITHUB_REPOSITORY)
+            echo "Creating repository: ${{ vars.DESTINATION_ORG }}/$REPO_NAME"
             gh repo create "${{ vars.DESTINATION_ORG }}/$REPO_NAME" --private
         env:
           GH_TOKEN: ${{ secrets.SOURCE_PAT }}
