@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y \
     apt-get update && \
     apt-get install -y terraform && \
     go install github.com/aquasecurity/tfsec/cmd/tfsec@latest && \
-    pip install truffleHog
+    pip install truffleHog flake8 pytest
 
 WORKDIR /workspace
 
