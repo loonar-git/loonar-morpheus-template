@@ -19,8 +19,8 @@ on:
 jobs:
   lint-and-validate:
     runs-on: ubuntu-22.04
-    container:
-      image: ghcr.io/${{ github.repository_owner }}/loonar-morpheus-template:latest
+#    container:
+#      image: ghcr.io/${{ github.repository_owner }}/loonar-morpheus-template:latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -28,8 +28,8 @@ jobs:
       - name: Run Bash linter
         run: shellcheck **/*.sh
 
-      # - name: Set up Terraform
-      #   uses: hashicorp/setup-terraform@v1
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
 
       - name: Run Terraform fmt
         run: terraform fmt -check -recursive
