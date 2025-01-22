@@ -8,6 +8,11 @@ on:
       - '.github/Dockerfile'
   workflow_dispatch:
 
+permissions: 
+  contents: read 
+  packages: write 
+  id-token: write    
+
 jobs:
   build-and-push:
     runs-on: ubuntu-22.04
