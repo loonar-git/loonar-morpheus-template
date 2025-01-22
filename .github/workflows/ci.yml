@@ -16,6 +16,7 @@ on:
       - '**/*.tf'
       - '**/*.sh'
 
+      
 jobs:
   lint-and-validate:
     runs-on: ubuntu-22.04

@@ -36,4 +36,4 @@ while ! check_workflows; do
 done
 
 # Criar um novo release com o nome WIP para a tag v0.0.0 como pre-release
-#gh release create v0.0.0 --title "WIP" --generate-notes #--prerelease --draft
+gh release create v0.0.0 --title "WIP" --generate-notes #--prerelease --draft
