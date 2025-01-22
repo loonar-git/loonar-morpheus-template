@@ -13,19 +13,18 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-24.04
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/loonar-morpheus-template:latest
+      credentials:
+         username: ${{ github.repository_owner }}
+         password: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up Bash linter
-      run: sudo apt-get install shellcheck
-
     - name: Run Bash linter
       run: shellcheck **/*.sh
-
-    - name: Set up Terraform
-      uses: hashicorp/setup-terraform@v1
 
     - name: Run Terraform fmt
       run: terraform fmt -check -recursive
@@ -33,17 +32,8 @@ jobs:
     - name: Run Terraform validate
       run: terraform validate
 
-    - name: Install Go
-      run: sudo apt-get install -y golang-go
-
-    - name: Install tfsec
-      run: go install github.com/aquasecurity/tfsec/cmd/tfsec@latest
-
     - name: Run tfsec to check for security issues in Terraform code
-      run: ~/go/bin/tfsec .
-
-    - name: Install trufflehog
-      run: pip install truffleHog
+      run: tfsec .
 
     - name: Run trufflehog to check for secrets
       run: trufflehog filesystem --json --repo_path .
