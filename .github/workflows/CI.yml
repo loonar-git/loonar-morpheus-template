@@ -11,7 +11,53 @@ on:
       - '*'
 
 jobs:
+  check-dependency:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check and wait for publish-ci-image workflow
+        uses: actions/github-script@v6
+        id: check-workflow
+        with:
+          script: |
+            const MAX_WAIT_MINUTES = 30;
+            const POLLING_INTERVAL_SECONDS = 30;
+            const startTime = new Date();
+            
+            async function getLatestWorkflowRun() {
+              const { data: runs } = await github.rest.actions.listWorkflowRuns({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: 'publish-ci-image.yml',
+                per_page: 1
+              });
+              return runs.workflow_runs[0];
+            }
+            
+            let lastRun = await getLatestWorkflowRun();
+            if (!lastRun) {
+              throw new Error('Nenhuma execução do workflow publish-ci-image encontrada');
+            }
+            
+            // Aguarda se houver uma execução em andamento
+            while (lastRun.status === 'in_progress' || lastRun.status === 'queued') {
+              const elapsedMinutes = (new Date() - startTime) / 1000 / 60;
+              if (elapsedMinutes > MAX_WAIT_MINUTES) {
+                throw new Error(`Timeout: Workflow publish-ci-image ainda em execução após ${MAX_WAIT_MINUTES} minutos`);
+              }
+              
+              console.log(`Workflow publish-ci-image ainda em execução. Aguardando ${POLLING_INTERVAL_SECONDS} segundos...`);
+              await new Promise(resolve => setTimeout(resolve, POLLING_INTERVAL_SECONDS * 1000));
+              lastRun = await getLatestWorkflowRun();
+            }
+            
+            if (lastRun.conclusion !== 'success') {
+              throw new Error(`A última execução do workflow publish-ci-image falhou. Status: ${lastRun.conclusion}`);
+            }
+            
+            console.log('Workflow publish-ci-image concluído com sucesso. Continuando...');
+
   validate:
+    needs: check-dependency
     runs-on: ubuntu-24.04
     container:
       image: ghcr.io/${{ github.repository_owner }}/loonar-morpheus-template:latest

@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - '.github/Dockerfile'
+      - '.github/workflows/publish-ci-image.yml'
   workflow_dispatch:
 
 permissions:
@@ -29,7 +30,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.SOURCE_PAT }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
