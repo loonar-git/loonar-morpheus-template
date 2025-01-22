@@ -3,6 +3,7 @@ FROM ubuntu:22.04
 ENV PATH="/usr/local/go/bin:/root/go/bin:${PATH}"
 
 RUN apt-get update && apt-get install -y \
+    apt-utils \
     curl \
     gnupg \
     software-properties-common \
