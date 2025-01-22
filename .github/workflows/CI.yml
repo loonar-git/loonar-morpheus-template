@@ -68,18 +68,75 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Get changed files
+      id: changed-files
+      run: |
+        echo "py_files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '\.py$' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+        echo "sh_files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '\.sh$' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+        echo "tf_files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '\.tf$' | tr '\n' ' ')" >> $GITHUB_OUTPUT
 
     - name: Run Bash linter
-      run: shellcheck **/*.sh
+      if: steps.changed-files.outputs.sh_files != ''
+      run: |
+        CHANGED_FILES="${{ steps.changed-files.outputs.sh_files }}"
+        if [ ! -z "$CHANGED_FILES" ]; then
+          shellcheck $CHANGED_FILES
+        fi
 
     - name: Run Terraform fmt
-      run: terraform fmt -check -recursive
+      if: steps.changed-files.outputs.tf_files != ''
+      run: |
+        CHANGED_FILES="${{ steps.changed-files.outputs.tf_files }}"
+        if [ ! -z "$CHANGED_FILES" ]; then
+          terraform fmt -check $CHANGED_FILES
+        fi
 
     - name: Run Terraform validate
-      run: terraform validate
+      if: steps.changed-files.outputs.tf_files != ''
+      run: |
+        CHANGED_FILES="${{ steps.changed-files.outputs.tf_files }}"
+        if [ ! -z "$CHANGED_FILES" ]; then
+          # Terraform validate precisa do diretório completo
+          unique_dirs=$(dirname $CHANGED_FILES | sort -u)
+          for dir in $unique_dirs; do
+            terraform -chdir=$dir validate
+          done
+        fi
 
-    - name: Run tfsec to check for security issues in Terraform code
-      run: tfsec .
+    - name: Run tfsec to check for security issues
+      if: steps.changed-files.outputs.tf_files != ''
+      run: |
+        CHANGED_FILES="${{ steps.changed-files.outputs.tf_files }}"
+        if [ ! -z "$CHANGED_FILES" ]; then
+          # tfsec precisa do diretório completo
+          unique_dirs=$(dirname $CHANGED_FILES | sort -u)
+          for dir in $unique_dirs; do
+            tfsec $dir
+          done
+        fi
 
     - name: Run trufflehog to check for secrets
-      run: trufflehog filesystem --json --repo_path .
+      run: |
+        CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+        if [ ! -z "$CHANGED_FILES" ]; then
+          trufflehog filesystem --json --only-verified $CHANGED_FILES
+        fi
+
+    - name: Run Python style checker (flake8)
+      if: steps.changed-files.outputs.py_files != ''
+      run: |
+        CHANGED_FILES="${{ steps.changed-files.outputs.py_files }}"
+        if [ ! -z "$CHANGED_FILES" ]; then
+          flake8 $CHANGED_FILES
+        fi
+
+    - name: Run Python tests
+      if: steps.changed-files.outputs.py_files != ''
+      run: |
+        CHANGED_FILES="${{ steps.changed-files.outputs.py_files }}"
+        if [ ! -z "$CHANGED_FILES" ]; then
+          pytest $CHANGED_FILES
+        fi
