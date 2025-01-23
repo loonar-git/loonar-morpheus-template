@@ -133,22 +133,11 @@ jobs:
         git config --global --add safe.directory "$GITHUB_WORKSPACE"
         
         if [ "${{ github.event_name }}" = "pull_request" ]; then
-          # Para Pull Requests, compare com o branch base
-          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          # Para Pull Requests
+          trufflehog --json --regex --entropy=True --max_depth=50 --branch=${{ github.head_ref }} .
         else
           # Para pushes diretos
-          if git rev-parse --verify HEAD^; then
-            # Se não for o primeiro commit, compare com o anterior
-            CHANGED_FILES=$(git diff --name-only HEAD^ HEAD)
-          else
-            # Se for o primeiro commit, pegue todos os arquivos
-            CHANGED_FILES=$(git ls-files)
-          fi
-        fi
-        
-        if [ ! -z "$CHANGED_FILES" ]; then
-          # Usando a sintaxe correta para a versão atual do trufflehog
-          trufflehog --json $CHANGED_FILES
+          trufflehog --json --regex --entropy=True --max_depth=50 --branch=${{ github.ref_name }} .
         fi
 
     - name: Run Python style checker (flake8)
