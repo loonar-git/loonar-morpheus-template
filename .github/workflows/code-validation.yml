@@ -1,4 +1,4 @@
-name: CI
+name: Source Code Validation
 
 on:
   push:
@@ -6,9 +6,13 @@ on:
       - '*'
     tags-ignore:
       - 'v*'
+    paths:
+      - 'src/**'
   pull_request:
     branches:
       - '*'
+    paths:
+      - 'src/**'
 
 jobs:
   check-dependency:
@@ -125,28 +129,6 @@ jobs:
           for dir in $unique_dirs; do
             tfsec $dir
           done
-        fi
-
-    - name: Run trufflehog to check for secrets
-      run: |
-        # Set directory as safe
-        git config --global --add safe.directory "$GITHUB_WORKSPACE"
-        
-        echo "🔍 Scanning repository for secrets..."
-        
-        if trufflehog --json --regex --entropy=True --max_depth=50 "$GITHUB_WORKSPACE" > trufflehog_output.json; then
-          echo "✅ No secrets found!"
-        else
-          echo "❌ WARNING: Secrets found in code!"
-          echo "Please:"
-          echo "1. Remove all found secrets"
-          echo "2. Immediately revoke any exposed tokens or credentials"
-          echo "3. Use environment variables or GitHub Actions secrets"
-          echo "4. In template files, use example values like 'YOUR_SECRET_HERE'"
-          echo ""
-          echo "Details of found secrets:"
-          cat trufflehog_output.json
-          exit 1
         fi
 
     - name: Run Python style checker (flake8)

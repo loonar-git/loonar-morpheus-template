@@ -1,4 +1,4 @@
-name: Publish CI Docker image
+name: Publish source code validation Docker image
 
 on:
   push:
