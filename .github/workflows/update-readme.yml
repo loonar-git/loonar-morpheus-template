@@ -1,0 +1,44 @@
+name: Update README
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'README.md'
+    tags-ignore:
+      - '*'
+
+jobs:
+  update-readme:
+    if: github.repository != 'loonar-morpheus/loonar-morpheus-template'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          
+      - name: Update README
+        run: |
+          REPO_NAME=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
+          GITHUB_USER=$(echo $GITHUB_REPOSITORY | cut -d'/' -f1)
+          
+          # Update repository specific placeholders
+          sed -i "s/{{REPOSITORY_NAME}}/$REPO_NAME/g" README.md
+          sed -i "s/{{YOUR_GITHUB_USERNAME}}/$GITHUB_USER/g" README.md
+          
+          # Update the title
+          sed -i "s/# Loonar Morpheus Template/# Loonar Morpheus - $REPO_NAME/g" README.md
+          
+          # Remove the template-specific sections after first update
+          sed -i '/### Creating your repository/,/### Using your repository/d' README.md
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add README.md
+          git diff --quiet && git diff --staged --quiet || git commit -m "docs: update README with repository information"
+          git push 
