@@ -129,6 +129,9 @@ jobs:
 
     - name: Run trufflehog to check for secrets
       run: |
+        # Configurar diretório como seguro
+        git config --global --add safe.directory "$GITHUB_WORKSPACE"
+        
         if [ "${{ github.event_name }}" = "pull_request" ]; then
           # Para Pull Requests, compare com o branch base
           CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
