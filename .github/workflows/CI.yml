@@ -70,13 +70,22 @@ jobs:
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
+        ref: ${{ github.event.pull_request.head.sha }}
 
     - name: Get changed files
       id: changed-files
       run: |
-        echo "py_files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '\.py$' | tr '\n' ' ')" >> $GITHUB_OUTPUT
-        echo "sh_files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '\.sh$' | tr '\n' ' ')" >> $GITHUB_OUTPUT
-        echo "tf_files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '\.tf$' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+        if [ "${{ github.event_name }}" = "pull_request" ]; then
+          # Para Pull Requests, compare com o branch base
+          echo "py_files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep '\.py$' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+          echo "sh_files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep '\.sh$' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+          echo "tf_files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep '\.tf$' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+        else
+          # Para pushes diretos, compare com o commit anterior
+          echo "py_files=$(git diff --name-only HEAD^ HEAD | grep '\.py$' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+          echo "sh_files=$(git diff --name-only HEAD^ HEAD | grep '\.sh$' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+          echo "tf_files=$(git diff --name-only HEAD^ HEAD | grep '\.tf$' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+        fi
 
     - name: Run Bash linter
       if: steps.changed-files.outputs.sh_files != ''
