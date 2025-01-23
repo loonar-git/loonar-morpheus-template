@@ -85,7 +85,8 @@
         "shd101wyy.markdown-preview-enhanced",
         "DavidAnson.vscode-markdownlint",
         "MarkLarah.pre-commit-vscode",
-        "usernamehw.errorlens"
+        "usernamehw.errorlens",
+        "donjayamanne.githistory"
       ]
     }
   }
