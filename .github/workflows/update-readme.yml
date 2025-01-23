@@ -11,7 +11,7 @@ on:
 
 jobs:
   update-readme:
-    if: github.repository != 'loonar-morpheus/loonar-morpheus-template'
+    if: github.repository != 'loonar-git/loonar-morpheus-template'
     runs-on: ubuntu-latest
     permissions:
       contents: write
