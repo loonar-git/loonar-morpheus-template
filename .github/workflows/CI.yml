@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Check and wait for publish-ci-image workflow
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         id: check-workflow
         with:
           script: |
