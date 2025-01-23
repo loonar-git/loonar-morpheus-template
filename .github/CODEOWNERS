@@ -1,0 +1,27 @@
+# Only the DevOps team can edit the following directories
+/.devcontainer/ @DevOps
+/.github/ @DevOps
+/utils/ @DevOps
+/scripts/ @DevOps
+
+# Restricts file creation in the root directory
+/* @DevOps
+
+# Allows only Python, Bash and Terraform files in src, restricts new subdirectories
+/src/* @DevOps
+/src/*.py @everyone
+/src/*.sh @everyone
+/src/*.bash @everyone
+/src/*.tf @everyone
+/src/*.tfvars @everyone
+/src/*.hcl @everyone
+
+# Allows only markdown and image files in docs, restricts new subdirectories
+/docs/* @DevOps
+/docs/*.md @everyone
+/docs/*.markdown @everyone
+/docs/*.png @everyone
+/docs/*.jpg @everyone
+/docs/*.jpeg @everyone
+/docs/*.gif @everyone
+/docs/*.svg @everyone
