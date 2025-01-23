@@ -134,10 +134,16 @@ jobs:
         
         if [ "${{ github.event_name }}" = "pull_request" ]; then
           # Para Pull Requests, verificar apenas as alterações do PR
-          trufflehog git file://$GITHUB_WORKSPACE --since-commit=${{ github.event.pull_request.base.sha }} --branch=${{ github.event.pull_request.head.sha }} --fail
+          trufflehog --json --regex --entropy=True --max_depth=50 \
+            --since_commit=${{ github.event.pull_request.base.sha }} \
+            --branch=${{ github.event.pull_request.head.sha }} \
+            "$GITHUB_WORKSPACE"
         else
           # Para pushes diretos, verificar apenas o último commit
-          trufflehog git file://$GITHUB_WORKSPACE --since-commit=${{ github.event.before }} --branch=${{ github.sha }} --fail
+          trufflehog --json --regex --entropy=True --max_depth=50 \
+            --since_commit=${{ github.event.before }} \
+            --branch=${{ github.sha }} \
+            "$GITHUB_WORKSPACE"
         fi
 
     - name: Run Python style checker (flake8)
