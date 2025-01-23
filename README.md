@@ -5,20 +5,20 @@
 
 </div>
 
-# Loonar Morpheus Template
+# Loonar Morpheus - loonar-morpheus-template
 
 <p align="center">
 
-  <img alt="Github language count" src="https://img.shields.io/github/languages/count/loonar-morpheus/{{REPOSITORY_NAME}}?color=56BEB8">
+  <img alt="Github language count" src="https://img.shields.io/github/languages/count/loonar-morpheus/loonar-morpheus-template?color=56BEB8">
 
-  <img alt="Repository size" src="https://img.shields.io/github/repo-size/loonar-morpheus/{{REPOSITORY_NAME}}?color=56BEB8">
+  <img alt="Repository size" src="https://img.shields.io/github/repo-size/loonar-morpheus/loonar-morpheus-template?color=56BEB8">
 
-  <img alt="License" src="https://img.shields.io/github/license/loonar-morpheus/{{REPOSITORY_NAME}}?color=56BEB8">
+  <img alt="License" src="https://img.shields.io/github/license/loonar-morpheus/loonar-morpheus-template?color=56BEB8">
 
-  <img alt="Github issues" src="https://img.shields.io/github/issues/loonar-morpheus/{{REPOSITORY_NAME}}?color=56BEB8" />
-  <img alt="Github forks" src="https://img.shields.io/github/forks/loonar-morpheus/{{REPOSITORY_NAME}}?color=56BEB8" />
+  <img alt="Github issues" src="https://img.shields.io/github/issues/loonar-morpheus/loonar-morpheus-template?color=56BEB8" />
+  <img alt="Github forks" src="https://img.shields.io/github/forks/loonar-morpheus/loonar-morpheus-template?color=56BEB8" />
 
-  <img alt="Github stars" src="https://img.shields.io/github/stars/loonar-morpheus/{{REPOSITORY_NAME}}?color=56BEB8" />
+  <img alt="Github stars" src="https://img.shields.io/github/stars/loonar-morpheus/loonar-morpheus-template?color=56BEB8" />
 </p>
 
 <!-- Status -->
@@ -67,15 +67,6 @@ Before starting :checkered_flag:, you need to have [Git](https://git-scm.com) in
 
 ## :checkered_flag: Starting
 
-### Creating your repository
-
-1. Click on "Use this template" button at the top of this repository
-2. Choose "Create a new repository"
-3. Fill in the repository name and description
-4. Choose the repository visibility (public or private)
-5. Click on "Create repository from template"
-
-### Using your repository
 
 ```bash
 # Clone your new repository
