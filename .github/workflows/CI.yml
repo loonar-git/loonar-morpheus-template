@@ -132,19 +132,8 @@ jobs:
         # Configurar diretório como seguro
         git config --global --add safe.directory "$GITHUB_WORKSPACE"
         
-        if [ "${{ github.event_name }}" = "pull_request" ]; then
-          # Para Pull Requests, verificar apenas as alterações do PR
-          trufflehog --json --regex --entropy=True --max_depth=50 \
-            --since_commit=${{ github.event.pull_request.base.sha }} \
-            --branch=${{ github.event.pull_request.head.sha }} \
-            "$GITHUB_WORKSPACE"
-        else
-          # Para pushes diretos, verificar apenas o último commit
-          trufflehog --json --regex --entropy=True --max_depth=50 \
-            --since_commit=${{ github.event.before }} \
-            --branch=${{ github.sha }} \
-            "$GITHUB_WORKSPACE"
-        fi
+        # Verificar todo o repositório em busca de segredos
+        trufflehog --json --regex --entropy=True --max_depth=50 "$GITHUB_WORKSPACE"
 
     - name: Run Python style checker (flake8)
       if: steps.changed-files.outputs.py_files != ''
