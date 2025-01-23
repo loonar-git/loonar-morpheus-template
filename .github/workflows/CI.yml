@@ -133,8 +133,14 @@ jobs:
           # Para Pull Requests, compare com o branch base
           CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
         else
-          # Para pushes diretos, compare com o commit anterior
-          CHANGED_FILES=$(git diff --name-only HEAD^ HEAD)
+          # Para pushes diretos
+          if git rev-parse --verify HEAD^; then
+            # Se não for o primeiro commit, compare com o anterior
+            CHANGED_FILES=$(git diff --name-only HEAD^ HEAD)
+          else
+            # Se for o primeiro commit, pegue todos os arquivos
+            CHANGED_FILES=$(git ls-files)
+          fi
         fi
         
         if [ ! -z "$CHANGED_FILES" ]; then
