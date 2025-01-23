@@ -4,7 +4,10 @@ on:
   pull_request:
     paths:
       - '*/**'
-
+  push:
+    branches:
+      - main
+      - master
 jobs:
   check-directories:
     runs-on: ubuntu-latest
