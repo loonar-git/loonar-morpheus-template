@@ -20,7 +20,7 @@ jobs:
     needs: install-gh-cli
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Check CI
         run: |
@@ -45,7 +45,7 @@ jobs:
     steps:
       - name: Checkout Source Repository
         id: checkout_source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       
       - name: Check if Destination Repository Exists
         id: check_repo
