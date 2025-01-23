@@ -147,7 +147,8 @@ jobs:
         fi
         
         if [ ! -z "$CHANGED_FILES" ]; then
-          trufflehog filesystem --json --only-verified $CHANGED_FILES
+          # Usando a sintaxe correta para a versão atual do trufflehog
+          trufflehog --json $CHANGED_FILES
         fi
 
     - name: Run Python style checker (flake8)
