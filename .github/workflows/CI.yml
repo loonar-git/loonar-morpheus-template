@@ -129,7 +129,14 @@ jobs:
 
     - name: Run trufflehog to check for secrets
       run: |
-        CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+        if [ "${{ github.event_name }}" = "pull_request" ]; then
+          # Para Pull Requests, compare com o branch base
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+        else
+          # Para pushes diretos, compare com o commit anterior
+          CHANGED_FILES=$(git diff --name-only HEAD^ HEAD)
+        fi
+        
         if [ ! -z "$CHANGED_FILES" ]; then
           trufflehog filesystem --json --only-verified $CHANGED_FILES
         fi
