@@ -1,0 +1,27 @@
+name: Validate Directory Structure
+
+on:
+  pull_request:
+    paths:
+      - '*/**'
+
+jobs:
+  check-directories:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Check for new directories
+        run: |
+          # Check for new directories in root
+          ROOT_DIRS=$(git diff --name-only --diff-filter=A ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep -E "^[^/]+/$" || true)
+          
+          # Check for new subdirectories at any level
+          SUB_DIRS=$(git diff --name-only --diff-filter=A ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep -E ".+/.+/$" || true)
+          
+          if [ ! -z "$ROOT_DIRS" ] || [ ! -z "$SUB_DIRS" ]; then
+            echo "❌ Creation of new directories is not allowed:"
+            [ ! -z "$ROOT_DIRS" ] && echo "In root:" && echo "$ROOT_DIRS"
+            [ ! -z "$SUB_DIRS" ] && echo "In subdirectories:" && echo "$SUB_DIRS"
+            exit 1
+          fi 
