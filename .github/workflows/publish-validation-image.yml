@@ -9,6 +9,9 @@ on:
       - '.github/workflows/publish-ci-image.yml'
   workflow_dispatch:
 
+# Adiciona verificação do repositório
+run-name: ${{ github.repository }} - Build and Push Docker Image
+
 permissions:
   contents: read
   packages: write
@@ -16,6 +19,8 @@ permissions:
 
 jobs:
   build-and-push:
+    # Adiciona condição para verificar o repositório
+    if: github.repository == 'loonar-git/loonar-morpheus-template'
     runs-on: ubuntu-22.04
 
     steps:

@@ -64,7 +64,7 @@ jobs:
     needs: check-dependency
     runs-on: ubuntu-24.04
     container:
-      image: ghcr.io/${{ github.repository_owner }}/loonar-morpheus-template:latest
+      image: ghcr.io/loonar0git/loonar-morpheus-template:latest
       credentials:
          username: ${{ github.repository_owner }}
          password: ${{ secrets.GITHUB_TOKEN }}
