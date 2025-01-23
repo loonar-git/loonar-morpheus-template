@@ -9,20 +9,20 @@ updates:
  - package-ecosystem: "devcontainers"
    directory: "/.devcontainer"
    schedule:
-     interval: weekly
+     interval: dayly
  - package-ecosystem: "terraform"
    directory: "/src"
    schedule:
-     interval: weekly
+     interval: dayly
  - package-ecosystem: "pip"
    directory: "/src"
    schedule:
-     interval: weekly
+     interval: dayly
  - package-ecosystem: "docker"
    directory: "/.github"
    schedule:
-     interval: weekly
+     interval: dayly
  - package-ecosystem: "github-actions"
    directory: "/.github/workflows"
    schedule:
-     interval: weekly
+     interval: dayly
