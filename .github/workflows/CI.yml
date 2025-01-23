@@ -133,11 +133,11 @@ jobs:
         git config --global --add safe.directory "$GITHUB_WORKSPACE"
         
         if [ "${{ github.event_name }}" = "pull_request" ]; then
-          # Para Pull Requests
-          trufflehog --json --regex --entropy=True --max_depth=50 --branch=${{ github.head_ref }} .
+          # Para Pull Requests, verificar apenas as alterações do PR
+          trufflehog git file://$GITHUB_WORKSPACE --since-commit=${{ github.event.pull_request.base.sha }} --branch=${{ github.event.pull_request.head.sha }} --fail
         else
-          # Para pushes diretos
-          trufflehog --json --regex --entropy=True --max_depth=50 --branch=${{ github.ref_name }} .
+          # Para pushes diretos, verificar apenas o último commit
+          trufflehog git file://$GITHUB_WORKSPACE --since-commit=${{ github.event.before }} --branch=${{ github.sha }} --fail
         fi
 
     - name: Run Python style checker (flake8)
