@@ -35,11 +35,6 @@ jobs:
         if: steps.check-team.outputs.is_member == 'true'
         uses: actions/checkout@v4
 
-      - name: Run Dependabot
-        uses: dependabot/fetch-metadata@v1.6.0
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          
       - name: Enable Dependabot
         run: |
           gh api \
