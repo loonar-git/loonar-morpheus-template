@@ -5,9 +5,10 @@
 # https://containers.dev/guide/dependabot
 
 version: 2
+enable-beta-ecosystems: true
 updates:
-  - package-ecosystem: "devcontainers"
-    directory: ".devcontainer/devcontainer.json"
+  - package-ecosystem: "devcontainers" # See documentation for possible values
+    directory: "/"
     schedule:
       interval: daily
   - package-ecosystem: "terraform"
@@ -15,7 +16,7 @@ updates:
     schedule:
       interval: daily
   - package-ecosystem: "pip"
-    directory: "/src/"
+    directory: "/src"
     schedule:
       interval: daily
     groups:
