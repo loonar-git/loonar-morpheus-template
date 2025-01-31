@@ -22,7 +22,7 @@ jobs:
         python-version: '3.x'
 
     - name: Extract dependencies
-      run: .github/workflows/update-python-dependencies.yml
+      run: .github/extract-dependencies.py
 
     - name: Commit requirements.txt
       run: |
