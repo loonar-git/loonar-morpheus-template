@@ -26,3 +26,4 @@ updates:
     directory: "/.github/workflows"
     schedule:
       interval: daily
+
