@@ -6,23 +6,23 @@
 
 version: 2
 updates:
- - package-ecosystem: "devcontainers"
-   directory: "/.devcontainer"
-   schedule:
-     interval: daily
- - package-ecosystem: "terraform"
-   directory: "/src"
-   schedule:
-     interval: daily
- - package-ecosystem: "pip"
-   directory: "/src"
-   schedule:
-     interval: daily
- - package-ecosystem: "docker"
-   directory: "/.github"
-   schedule:
-     interval: daily
- - package-ecosystem: "github-actions"
-   directory: "/.github/workflows"
-   schedule:
-     interval: daily
+  - package-ecosystem: "devcontainers"
+    directory: "/.devcontainer"
+    schedule:
+      interval: daily
+  - package-ecosystem: "terraform"
+    directory: "/src"
+    schedule:
+      interval: daily
+  - package-ecosystem: "pip"
+    directory: "/src"
+    schedule:
+      interval: daily
+  - package-ecosystem: "docker"
+    directory: "/.github"
+    schedule:
+      interval: daily
+  - package-ecosystem: "github-actions"
+    directory: "/.github/workflows"
+    schedule:
+      interval: daily
