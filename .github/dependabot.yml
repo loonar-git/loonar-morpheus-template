@@ -15,7 +15,7 @@ updates:
     schedule:
       interval: daily
   - package-ecosystem: "pip"
-    directory: "/src/requirements.txt"
+    directory: "src/requirements.txt"
     schedule:
       interval: daily
   - package-ecosystem: "docker"
