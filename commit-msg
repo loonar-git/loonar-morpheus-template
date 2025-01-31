@@ -1,0 +1,45 @@
+#!/bin/sh
+
+# WIP: Esse script adiciona no commit a mensagem que está no comentário do código
+
+# TODO: Esse arquivo deve ser copiado para a pasta .git/hooks/commit-msg e o comando "chmod +x .git/hooks/commit-msg" executado
+
+
+
+# Função para determinar o prefixo do comentário com base na extensão do arquivo
+get_comment_prefix() {
+  case "$1" in
+    *.c | *.cpp | *.h | *.java | *.js | *.jsx | *.ts | *.tsx | *.m | *.swift)
+      echo "// commit: ";;
+    *.py | *.rb | *.sh | *.pl | *.tcl | *.r | *.go | *.lua | *.yml | *.yaml | *.coffee | *.rs)
+      echo "# commit: ";;
+    *.php)
+      echo "// commit: ";;
+    *.html | *.xml | *.css | *.scss | *.less | *.sql)
+      echo "<!-- commit: ";;
+    *.ini | *.config | *.toml)
+      echo "# commit: ";;
+    *.bat | *.cmd)
+      echo "rem commit: ";;
+    *)
+      echo "// commit: ";;
+  esac
+}
+
+# Arquivo temporário para armazenar a mensagem do commit
+temp_file=$(mktemp)
+
+# Extraí os comentários que começam com o prefixo correto
+for file in $(git diff --name-only --cached); do
+  comment_prefix=$(get_comment_prefix "$file")
+  grep "^$comment_prefix" "$file" >> "$temp_file"
+done
+
+# Remove o prefixo dos comentários das mensagens
+if [ -s "$temp_file" ]; then
+  sed -i "s#^$comment_prefix ##" "$temp_file"
+  cat "$temp_file" > .git/COMMIT_EDITMSG
+fi
+
+# Limpa o arquivo temporário
+rm "$temp_file"

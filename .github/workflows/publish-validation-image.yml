@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - '.github/Dockerfile'
-      - '.github/workflows/publish-ci-image.yml'
+      - '.github/workflows/public-validation-image.yml'
   workflow_dispatch:
 
 # Adiciona verificação do repositório
