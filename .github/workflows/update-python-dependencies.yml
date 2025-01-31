@@ -1,0 +1,33 @@
+name: Update Dependencies
+
+on:
+  push:
+    paths:
+      - 'src/**/*.py'
+  pull_request:
+    paths:
+      - 'src/**/*.py'
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Extract dependencies
+      run: .github/workflows/update-python-dependencies.yml
+
+    - name: Commit requirements.txt
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add src/requirements.txt
+        git commit -m "Update requirements.txt"
+        git push
