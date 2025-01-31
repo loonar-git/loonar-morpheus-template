@@ -15,6 +15,12 @@ if [[ $confirm != [yY] ]]; then
     exit 1
 fi
 
+# Check if gh and jq are installed
+if ! command -v gh &> /dev/null || ! command -v jq &> /dev/null; then
+    echo "Error: gh and jq are required but not installed."
+    exit 1
+fi
+
 # Get the URL of the remote repository
 REMOTE_URL=$(git config --get remote.origin.url)
 # Extract the owner and repository name from the remote URL
@@ -29,10 +35,27 @@ API_URL="https://api.github.com/repos/$OWNER/$REPO/actions/runs"
 delete_runs() {
     RUNS=$(gh api "$API_URL" | jq -r '.workflow_runs[] | .id')
 
+    if [ -z "$RUNS" ]; then
+        echo "No workflow runs found."
+        exit 0
+    fi
+
     for RUN_ID in $RUNS; do
-        gh api -X DELETE "repos/$OWNER/$REPO/actions/runs/$RUN_ID"
-        echo "Deleted run ID: $RUN_ID"
+        if gh api -X DELETE "repos/$OWNER/$REPO/actions/runs/$RUN_ID"; then
+            echo "Deleted run ID: $RUN_ID"
+        else
+            echo "Failed to delete run ID: $RUN_ID"
+        fi
     done
+
+    # Verify if runs are deleted
+    REMAINING_RUNS=$(gh api "$API_URL" | jq -r '.workflow_runs[] | .id')
+    if [ -n "$REMAINING_RUNS" ]; then
+        echo "Some runs were not deleted. Retrying..."
+        delete_runs
+    else
+        echo "All runs deleted successfully."
+    fi
 }
 
 # Execute the delete function
