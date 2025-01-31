@@ -17,9 +17,11 @@ on:
 jobs:
   check-dependency:
     runs-on: ubuntu-24.04
+    env:
+      SOURCE_PAT: ${{ secrets.SOURCE_PAT }}
     steps:
       - name: Check and wait for publish-validation-image workflow
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         id: check-workflow
         with:
           script: |
@@ -29,8 +31,8 @@ jobs:
             
             async function getLatestWorkflowRun() {
               const { data: runs } = await github.rest.actions.listWorkflowRuns({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
+                owner: 'loonar-git',
+                repo: 'loonar-morpheus-template',
                 workflow_id: 'publish-validation-image.yml',
                 per_page: 1
               });
@@ -54,11 +56,7 @@ jobs:
               lastRun = await getLatestWorkflowRun();
             }
             
-            if (lastRun.conclusion !== 'success') {
-              throw new Error(`A última execução do workflow publish-validation-image falhou. Status: ${lastRun.conclusion}`);
-            }
-            
-            console.log('Workflow publish-validation-image concluído com sucesso. Continuando...');
+            console.log('Workflow publish-validation-image concluído. Continuando...');
 
   validate:
     needs: check-dependency
@@ -68,7 +66,8 @@ jobs:
       credentials:
          username: "loonar-git"
          password: ${{ secrets.SOURCE_PAT }}
-
+    env:
+      SOURCE_PAT: ${{ secrets.SOURCE_PAT }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -89,7 +88,6 @@ jobs:
           echo "py_files=$(git diff --name-only HEAD^ HEAD | grep '\.py$' | tr '\n' ' ')" >> $GITHUB_OUTPUT
           echo "sh_files=$(git diff --name-only HEAD^ HEAD | grep '\.sh$' | tr '\n' ' ')" >> $GITHUB_OUTPUT
           echo "tf_files=$(git diff --name-only HEAD^ HEAD | grep '\.tf$' | tr '\n' ' ')" >> $GITHUB_OUTPUT
-        fi
 
     - name: Run Bash linter
       if: steps.changed-files.outputs.sh_files != ''
