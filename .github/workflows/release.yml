@@ -3,6 +3,15 @@ on:
   release:
     types:
       - created
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  checks: write
+  actions: write
+  packages: write
+  deployments: write
+  security-events: write
 
 jobs:
   install-gh-cli:
