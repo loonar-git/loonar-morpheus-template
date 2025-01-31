@@ -15,9 +15,13 @@ updates:
     schedule:
       interval: daily
   - package-ecosystem: "pip"
-    directory: "src/requirements.txt"
+    directory: "/src/"
     schedule:
       interval: daily
+    groups:
+      python-packages:
+        patterns:
+          - "*"
   - package-ecosystem: "docker"
     directory: "/.github"
     schedule:
@@ -26,4 +30,5 @@ updates:
     directory: "/.github/workflows"
     schedule:
       interval: daily
+
 
