@@ -15,6 +15,7 @@
 /src/*.tf @everyone
 /src/*.tfvars @everyone
 /src/*.hcl @everyone
+/src/requirements.txt @everyone
 
 # Allows only markdown and image files in docs, restricts new subdirectories
 /docs/* @DevOps
