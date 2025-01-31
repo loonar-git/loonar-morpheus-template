@@ -1,0 +1,6 @@
+```
+
+If you add any dependencies later, you can list them in this file. For example, if you use `requests`, you would add:
+
+```plaintext
+requests

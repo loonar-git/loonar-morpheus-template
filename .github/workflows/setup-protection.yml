@@ -16,7 +16,7 @@ jobs:
           IS_MEMBER=$(gh api /orgs/${{ github.repository_owner }}/teams/DevOps/memberships/${{ github.actor }} --silent && echo "true" || echo "false")
           echo "is_member=$IS_MEMBER" >> $GITHUB_OUTPUT
         env:
-          GITHUB_TOKEN: ${{ secrets.SOURCE_PAT }}
+          GH_TOKEN: ${{ github.token }}
         continue-on-error: true
 
       - uses: actions/checkout@v4
@@ -30,7 +30,7 @@ jobs:
         if: steps.check-team.outputs.is_member == 'true'
         run: bash utils/setup_branch_protection.sh
         env:
-          GITHUB_TOKEN: ${{ secrets.SOURCE_PAT }}
+          GH_TOKEN: ${{ github.token }}
 
       - name: Permission denied
         if: steps.check-team.outputs.is_member != 'true'
