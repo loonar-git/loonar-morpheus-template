@@ -7,7 +7,7 @@
 version: 2
 updates:
   - package-ecosystem: "devcontainers"
-    directory: "/.devcontainer"
+    directory: "/.devcontainer/devcontainer.json"
     schedule:
       interval: daily
   - package-ecosystem: "terraform"
@@ -15,7 +15,7 @@ updates:
     schedule:
       interval: daily
   - package-ecosystem: "pip"
-    directory: "/src"
+    directory: "/src/requirements.txt"
     schedule:
       interval: daily
   - package-ecosystem: "docker"
