@@ -33,7 +33,7 @@ jobs:
 
       - name: Check out code
         if: steps.check-team.outputs.is_member == 'true'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Enable Dependabot
         run: |

@@ -19,7 +19,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         continue-on-error: true
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         if: steps.check-team.outputs.is_member == 'true'
       
       - name: Make script executable
