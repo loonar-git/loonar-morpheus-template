@@ -21,7 +21,7 @@ jobs:
       SOURCE_PAT: ${{ secrets.SOURCE_PAT }}
     steps:
       - name: Check and wait for publish-validation-image workflow
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         id: check-workflow
         with:
           script: |
