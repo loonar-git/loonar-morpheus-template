@@ -14,7 +14,7 @@ jobs:
       
       - name: Grant package access
         if: github.event.repository.is_template == false && github.event.repository.template_repository != null
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
